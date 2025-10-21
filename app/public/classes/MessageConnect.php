@@ -22,18 +22,16 @@ class MessageConnect extends Connect
         }
         return $messages;
     }
-    public function getMessage($id){
-        $result = parent::fetchOne("SELECT * FROM `messages` WHERE id=:id",["id"=>$id]);
+    public function getMessage($m_id){
+        $result = parent::fetchOne("SELECT * FROM `messages` WHERE id=:id",["id"=>$m_id]);
         return new Message($result["id"],$result["message"]);
     }
     public function newMessage($data){
         $rows = parent::execute("INSERT INTO `messages` (message) VALUES (:message)",[":message"=>$data]);
-        if($rows){
+        if($rows) {
             return $rows;
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
 }

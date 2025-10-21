@@ -1,15 +1,15 @@
 <?php
 namespace classes;
 class Message {
-    private $id;
+    private $message_id;
     public $message;
-    public function __set($id, $value)
+    public function __set($m_id, $value)
     {
-        $this->id = $id;
+        $this->message_id = $m_id;
     }
-    public function __construct($id, $message){
+    public function __construct($m_id, $message){
         $this->message = $message;
-        $this->id = $id;
+        $this->message_id = $m_id;
     }
     public function printMessage(){
         echo $this->message;

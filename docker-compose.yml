@@ -53,6 +53,13 @@ services:
       - .:/app
     command: analyse -l 5 /app
 
+  phpmd:
+    image: php:8.2-cli
+    working_dir: /app
+    volumes:
+      - ./:/app
+    entrypoint: [ "php", "vendor/bin/phpmd" ]
+
 networks:
   nginx-php-mysql: {}  # must be a mapping (can be empty)
 
