@@ -17,8 +17,8 @@ class MessageConnect extends Connect
     public function getMessages(){
         $result = parent::fetchAll("SELECT * FROM `messages`");
         $messages = [];
-        for ($i = 0,$len=count($result); $i < len; $i++) {
-            $messages[i]=new Message($result[$i]["id"],$result[$i]["message"]);
+        for ($i = 0,$len=count($result); $i < $len; $i++) {
+            $messages[$i]=new Message($result[$i]["id"],$result[$i]["message"]);
         }
         return $messages;
     }
