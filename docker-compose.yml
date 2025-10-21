@@ -48,7 +48,7 @@ services:
       nginx-php-mysql: {}
 
   phpstan:
-    image: phpstan/phpstan:1.0-php8.1
+    image: phpstan/phpstan
     volumes:
       - .:/app
     command: analyse /app
