@@ -51,7 +51,7 @@ services:
     image: phpstan/phpstan
     volumes:
       - .:/app
-    command: analyse /app
+    command: analyse -l 5 /app
 
 networks:
   nginx-php-mysql: {}  # must be a mapping (can be empty)
