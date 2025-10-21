@@ -22,6 +22,8 @@ services:
       - "9000:9000"
     volumes:
       - ./app:/var/www/project
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       nginx-php-mysql: {}
 
