@@ -47,6 +47,12 @@ services:
     networks:
       nginx-php-mysql: {}
 
+  phpstan:
+    image: phpstan/phpstan:1.0-php8.1
+    volumes:
+      - .:/app
+    command: analyse /app
+
 networks:
   nginx-php-mysql: {}  # must be a mapping (can be empty)
 
