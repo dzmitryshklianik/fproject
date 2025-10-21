@@ -6,7 +6,6 @@ use classes\Connect;
 
 class MessageConnect extends Connect
 {
-
     protected $host = "mysql-service";
     protected $user = "root";
     protected $password = "secret";
@@ -20,17 +19,23 @@ class MessageConnect extends Connect
         for ($i = 0,$len=count($result); $i < $len; $i++) {
             $messages[$i]=new Message($result[$i]["id"],$result[$i]["message"]);
         }
+
         return $messages;
     }
+
     public function getMessage($m_id){
         $result = parent::fetchOne("SELECT * FROM `messages` WHERE id=:id",["id"=>$m_id]);
+
         return new Message($result["id"],$result["message"]);
     }
+
     public function newMessage($data){
         $rows = parent::execute("INSERT INTO `messages` (message) VALUES (:message)",[":message"=>$data]);
         if($rows) {
+
             return $rows;
         }
+
         return false;
     }
 
