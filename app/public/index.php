@@ -11,6 +11,5 @@ $db = new \classes\MessageConnect('mysql-service', 'root', 'secret','test',3306)
 $db->connect();
 $m = $db->getMessage(1);
 $m->printMessage();
-echo "i sqy hello";
 $db->disconnect();
 ?>
