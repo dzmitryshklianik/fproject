@@ -13,6 +13,7 @@ class Connect
     protected $database;
     protected $port;
     protected $conn;
+
     public function __construct(string $host,string $user, string $password, string $database, int $port){
         $this->host = $host;
         $this->user = $user;
@@ -20,6 +21,7 @@ class Connect
         $this->database = $database;
         $this->port = $port;
     }
+
     public function connect(){
         $this->conn = null;
         try{
@@ -28,11 +30,14 @@ class Connect
         } catch(PDOException $e){
             echo "Connection failed: " . $e->getMessage();
         }
+
         return $this->conn;
     }
+
     public function disconnect(){
         $this->conn = null;
     }
+
     public function query($sql, $params = []){
         try {
             $stmt = $this->conn->prepare($sql);
@@ -42,9 +47,11 @@ class Connect
                 }
             }
             $stmt->execute();
+
             return $stmt;
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
+
             return false;
         }
 
@@ -54,20 +61,27 @@ class Connect
         if($stmt){
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
+
     public function fetchAll($sql, $params = []){
         $stmt = $this->query($sql, $params);
         if($stmt){
+
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
+
         return false;
     }
+
     public function execute($sql, $params = []){
         $stmt = $this->query($sql, $params);
         if($stmt){
+
             return $stmt->rowCount();
         }
+
         return false;
     }
 }
