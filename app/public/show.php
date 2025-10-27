@@ -5,4 +5,4 @@ require "src/controllers/products.php";
 
 $controller = new Products();
 
-$controller->actionIndex();
+$controller->show();
