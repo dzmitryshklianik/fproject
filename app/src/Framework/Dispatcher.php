@@ -5,22 +5,28 @@ declare(strict_types=1);
 
 namespace Framework;
 
+use App\Middleware\ChangeRequestExample;
+use App\Middleware\ChangeResponseExample;
 use Framework\Exceptions\PageNotFoundException;
 use ReflectionMethod;
+use UnexpectedValueException;
 
 class Dispatcher
 {
     public function __construct(private Router    $router,
-                                private Container $container)
+                                private Container $container,
+                                private array $middleware_classes)
     {
     }
 
-    public function handle(string $path)
+    public function handle(Request $request): Response
     {
-        $params = $this->router->match($path);
+        $path = $this->getPath($request->uri);
+
+        $params = $this->router->match($path, $request->method);
 
         if ($params === false) {
-            throw new PageNotFoundException("No route matched for path '{$path}'");
+            throw new PageNotFoundException("No route matched for path '{$path}' with method '{$request->method}'");
         }
 
         $action = $this->getActionName($params);
@@ -28,9 +34,43 @@ class Dispatcher
 
         $controller_object = $this->container->get($controller);
 
+        $controller_object->setViewer($this->container->get(TemplateViewerInterface::class));
+
+        $controller_object->setResponse($this->container->get(Response::class));
+
         $args = $this->getActionArguments($controller, $action, $params);
 
-        $controller_object->$action(...$args);
+        $controller_handler = new ControllerRequestHandler($controller_object,$action,$args);
+
+        $middleware = $this->getMiddleware($params);
+
+        $middleware_handler = new MiddlewareRequestHandler($middleware,
+                                                            $controller_handler);
+
+        return $middleware_handler->handle($request);
+    }
+
+    private function getMiddleware(array $params):array
+    {
+        if (! array_key_exists("middleware",$params)) {
+            return [];
+        }
+
+        $middleware = explode("|",$params["middleware"]);
+
+        array_walk($middleware,function(&$value){
+
+            if(! array_key_exists($value,$this->middleware_classes)){
+
+                throw new UnexpectedValueException("Middleware class '{$value}' does not exist");
+
+            }
+
+            $value = $this->container->get($this->middleware_classes[$value]);
+
+        });
+
+        return $middleware;
     }
 
     private function getActionArguments(string $controller, string $action, array $params): array
@@ -70,6 +110,19 @@ class Dispatcher
         $action = $params["action"];
         $action = lcfirst(str_replace("-", "", ucwords(strtolower($action), "-")));
         return $action;
+    }
+
+    private function getPath(string $uri): string
+    {
+        $path=parse_url($uri,PHP_URL_PATH);
+
+        if($path === false){
+
+            throw new UnexpectedValueException("Malformed URL: '$uri'");
+
+        }
+
+        return $path;
     }
 
 }
