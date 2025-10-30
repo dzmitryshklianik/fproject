@@ -14,11 +14,14 @@ class Container
 {
     private array $registry = [];
 
+    //Write behavior for get method for class
     public function set(string $name, Closure $value): void
     {
         $this->registry[$name] = $value;
     }
 
+    //Search saved behavior or create default without null or combined params
+    //return exemplar of class with set definitions
     public function get(string $class_name): object
     {
         if (array_key_exists($class_name, $this->registry)) {

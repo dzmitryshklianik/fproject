@@ -8,6 +8,7 @@ class   Router
 {
     private array $routes = [];
 
+    //adding a new route
     public function add(string $path, array $params = []): void
     {
         $this->routes[] = [
@@ -16,6 +17,8 @@ class   Router
         ];
     }
 
+    //searching template for current request
+    //return param for it
     public function match(string $path, string $method): array|bool
     {
         $path = urldecode($path);
@@ -44,7 +47,7 @@ class   Router
 
         return false;
     }
-
+    //make template from current path
     private function getPatternFromRoutePath(string $route_path): string
     {
         $route_path = ltrim($route_path, "/");

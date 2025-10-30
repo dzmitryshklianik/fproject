@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework;
 
+//Response class. Contains status code, redirects and final view
 class Response
 {
     private string $body = "";

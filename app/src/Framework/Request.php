@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework;
 
+//Request class with GLOBALS
 class Request
 {
     public function __construct(public string $uri,

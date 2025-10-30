@@ -11,6 +11,7 @@ use Throwable;
 
 class ErrorHandler
 {
+    //Handle error throw exception for next handler with information
     public static function handleError(
         int    $errno,
         string $errstr,
@@ -20,19 +21,20 @@ class ErrorHandler
         throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
     }
 
+    //Definite response code, view template for exception (if we don't show errors)
     public static function handleException(Throwable $exception): void
     {
         if ($exception instanceof PageNotFoundException) {
 
             http_response_code(404);
 
-            $template = "404.php";
+            $template = "Errors/404.php";
 
         } else {
 
             http_response_code(500);
 
-            $template = "500.php";
+            $template = "Errors/500.php";
 
         }
 

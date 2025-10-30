@@ -8,6 +8,7 @@ namespace Framework;
 use App\Database;
 use PDO;
 
+//Base Model class with DB query and connection methods
 abstract class Model
 {
     protected $table;

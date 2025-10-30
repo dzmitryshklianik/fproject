@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework;
 
+//Base Controller class with base functionality for children
 abstract class Controller
 {
     protected Request $request;

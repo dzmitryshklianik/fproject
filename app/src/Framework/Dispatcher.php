@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace Framework;
 
-use App\Middleware\ChangeRequestExample;
-use App\Middleware\ChangeResponseExample;
 use Framework\Exceptions\PageNotFoundException;
 use ReflectionMethod;
 use UnexpectedValueException;
@@ -19,37 +17,53 @@ class Dispatcher
     {
     }
 
+    //Definite controller,view,action,params for request
+    //Redirect for needed classes
     public function handle(Request $request): Response
     {
         $path = $this->getPath($request->uri);
 
+        //extract params from path
         $params = $this->router->match($path, $request->method);
 
+        //if state about: this template of route doesn't exist
         if ($params === false) {
             throw new PageNotFoundException("No route matched for path '{$path}' with method '{$request->method}'");
         }
 
+        //extract name of action from params
         $action = $this->getActionName($params);
+
+        // extract controller name from params
         $controller = $this->getControllerName($params);
 
+        //create controller object for processing request
         $controller_object = $this->container->get($controller);
 
+        //set view template for response display
         $controller_object->setViewer($this->container->get(TemplateViewerInterface::class));
 
+        //set response object to store response
         $controller_object->setResponse($this->container->get(Response::class));
 
+        //get list of arguments for concrete action of controller
         $args = $this->getActionArguments($controller, $action, $params);
 
+        //create handler object
         $controller_handler = new ControllerRequestHandler($controller_object,$action,$args);
 
+        //extract array of middlewares from params
         $middleware = $this->getMiddleware($params);
 
+        //create all handler object
         $middleware_handler = new MiddlewareRequestHandler($middleware,
                                                             $controller_handler);
 
+        //handle request, return response
         return $middleware_handler->handle($request);
     }
 
+    //Check middlewares in array. If they exist, create middlewares objects array
     private function getMiddleware(array $params):array
     {
         if (! array_key_exists("middleware",$params)) {
@@ -73,6 +87,7 @@ class Dispatcher
         return $middleware;
     }
 
+    //Check necessary params for action. Return list of required params from params
     private function getActionArguments(string $controller, string $action, array $params): array
     {
         $args = [];
@@ -88,6 +103,7 @@ class Dispatcher
         return $args;
     }
 
+    //Extract and normalize controller name from path
     private function getControllerName(array $params): string
     {
         $controller = $params["controller"];
@@ -105,6 +121,7 @@ class Dispatcher
         return $namespace . "\\" . $controller;
     }
 
+    //Extract and normalize action name from path
     private function getActionName(array $params): string
     {
         $action = $params["action"];

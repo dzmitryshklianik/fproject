@@ -1,7 +1,8 @@
 <?php
-
+//object for storing routes
 $router = new Framework\Router();
 
+//route templates
 $router->add("/admin/{controller}/{action}", ["namespace"=>"Admin"]);
 $router->add("/{title}/{id:\d+}/{page:\d+}",["controller"=>"products","action"=>"showPage"]);
 $router->add("/product/{slug:[\w-]+}",["controller"=>"products","action"=>"show"]);

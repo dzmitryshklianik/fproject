@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework;
 
+//Class to handle multiply middlewares
 class MiddlewareRequestHandler implements RequestHandlerInterface
 {
     public function __construct(private array $middlewares,

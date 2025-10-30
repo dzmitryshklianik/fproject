@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 
 namespace Framework;
+
+//Template for view. Supporting alternate syntax of view files
 class MVCTemplateViewer implements TemplateViewerInterface
 {
     public function render($template, array $data = []): string
